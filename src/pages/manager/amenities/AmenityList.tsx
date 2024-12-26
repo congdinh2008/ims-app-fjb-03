@@ -2,6 +2,7 @@ import { faAngleDoubleLeft, faAngleDoubleRight, faAngleLeft, faAngleRight, faEdi
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import AmenityDetail from "./AmenityDetail";
 
 function AmenityList() {
     const [title] = useState<string>("Amenity Management");
@@ -12,6 +13,8 @@ function AmenityList() {
     const [pageList] = useState<number[]>([5, 10, 20, 50, 100]);
     const [pageInfo, setPageInfo] = useState<any>({});
     const [pageLimit] = useState<number>(3);
+    const [isShowDetail, setIsShowDetail] = useState<boolean>(false);
+    const [selectedItem, setSelectedItem] = useState<any>({});
 
     // Fetch data from API
     const searchData = async () => {
@@ -50,6 +53,16 @@ function AmenityList() {
         return listPage;
     }
 
+    const onCreate = () => {
+        setIsShowDetail(true);
+        setSelectedItem(null);
+    }
+
+    const onEdit = async (item: any) => {
+        setIsShowDetail(true);
+        setSelectedItem(item);
+    };
+
     const onDelete = async (item: any) => {
         console.log("Delete item: ", item);
         const apiUrl = 'http://localhost:8080/api/v1/hotel-services';
@@ -79,7 +92,8 @@ function AmenityList() {
                         </div>
                     </div>
                     <div className="card-footer p-3 flex justify-between text-white">
-                        <button type="button" className="p-2 px-4 bg-green-500 hover:bg-green-600 rounded-full">
+                        <button type="button" onClick={onCreate}
+                            className="p-2 px-4 bg-green-500 hover:bg-green-600 rounded-full">
                             <FontAwesomeIcon icon={faPlus} className="mr-2" />
                             Create
                         </button>
@@ -121,7 +135,7 @@ function AmenityList() {
                                     <td>{item.active ? "Yes" : "No"}</td>
                                     <td>
                                         <div className="flex justify-center">
-                                            <button type="button" title="Edit">
+                                            <button type="button" title="Edit" onClick={() => onEdit(item)}>
                                                 <FontAwesomeIcon icon={faEdit} className="mr-2 text-blue-500 hover:text-blue-700" />
                                             </button>
                                             <button type="button" title="Delete" onClick={() => onDelete(item)}>
@@ -185,6 +199,7 @@ function AmenityList() {
             </div>
 
             {/* Detail Component */}
+            {isShowDetail && <AmenityDetail item={selectedItem} />}
         </section>
     )
 }
