@@ -15,7 +15,7 @@ function Header() {
                         <Link to="/" className="nav-link block p-4 hover:bg-blue-700">Home</Link>
                     </li>
                     <li className="nav-item">
-                        <Link to="/manager/dashboard" className="nav-link block p-4 hover:bg-blue-700">Admin Dashboard</Link>
+                        <Link to="/manager/dashboard" className="nav-link block p-4 hover:bg-blue-700">Management</Link>
                     </li>
                     <li className="nav-item">
                         <Link to="/about" className="nav-link block p-4 hover:bg-blue-700">About</Link>

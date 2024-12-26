@@ -9,6 +9,7 @@ import Login from './pages/auth/Login'
 import Register from './pages/auth/Register'
 import ManagerLayout from './shared/layouts/ManagerLayout'
 import Dashboard from './pages/manager/Dashboard'
+import AmenityList from './pages/manager/amenities/AmenityList'
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
 
         {/* Manager Page */}
         <Route path="/manager/dashboard" element={<ManagerLayout><Dashboard /></ManagerLayout>} />
+        <Route path="/manager/amenities" element={<ManagerLayout><AmenityList /></ManagerLayout>} />
 
         {/* Auth Page */}
         <Route path="/auth/login" element={<AnonymousLayout><Login /></AnonymousLayout>} />
