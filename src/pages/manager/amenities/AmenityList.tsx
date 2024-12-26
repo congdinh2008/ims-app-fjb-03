@@ -50,6 +50,18 @@ function AmenityList() {
         return listPage;
     }
 
+    const onDelete = async (item: any) => {
+        console.log("Delete item: ", item);
+        const apiUrl = 'http://localhost:8080/api/v1/hotel-services';
+        const response = await axios.delete(`${apiUrl}/${item.id}`);
+        if (response.data) {
+            searchData();
+        } else {
+            console.log("Delete failed");
+        }
+
+    }
+
     return (
         <section>
             {/* Search */}
@@ -112,7 +124,7 @@ function AmenityList() {
                                             <button type="button" title="Edit">
                                                 <FontAwesomeIcon icon={faEdit} className="mr-2 text-blue-500 hover:text-blue-700" />
                                             </button>
-                                            <button type="button" title="Delete">
+                                            <button type="button" title="Delete" onClick={() => onDelete(item)}>
                                                 <FontAwesomeIcon icon={faTrash} className="mr-2 text-red-500 hover:text-red-700" />
                                             </button>
                                         </div>
