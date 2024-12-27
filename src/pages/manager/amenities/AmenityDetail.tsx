@@ -1,59 +1,42 @@
 import { faEraser, faRotate, faSave } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
-import { useState } from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 function AmenityDetail({ item }: { item: any }) {
-    const [name, setName] = useState<string>(item ? item.name : '');
-    const [price, setPrice] = useState<number>(item ? item.price : 0);
-    const [nameError, setNameError] = useState<string>('');
-    const [priceError, setPriceError] = useState<string>('');
 
-    const validateForm = (data: any) => {
-        let isValid = true;
-        if (data.name === '') {
-            setNameError('Name is required');
-            isValid = false;
-        }
-
-        if (data.name.length < 2 || data.name.length > 50) {
-            setNameError('Name must be between 2 and 50 characters');
-            isValid = false;
-        }
-
-        if (data.price < 0) {
-            setPriceError('Price is required');
-            isValid = false;
-        }
-
-        return isValid;
-    }
-
-    const handleSubmit = async (e: any) => {
-        e.preventDefault();
-        const apiUrl = 'http://localhost:8080/api/v1/hotel-services';
-        const data = { name, price };
-        if (!validateForm(data)) {
-            return;
-        }
-
-        if (item) {
-            Object.assign(data, { id: item.id });
-            const response = await axios.put(`${apiUrl}/${item.id}`, data);
-            if (response.data) {
-                alert("Amenity updated successfully");
+    const formik = useFormik({
+        initialValues: {
+            name: item && item.name ? item.name : '',
+            price: item && item.price ? item.price : 0
+        },
+        validationSchema: Yup.object({
+            name: Yup.string().required('Name is required')
+                .min(2, 'Name must be at least 2 characters')
+                .max(50, 'Name must be at most 50 characters'),
+            price: Yup.number().required('Price is required').min(0, 'Price must be at least 0')
+        }),
+        onSubmit: async (values) => {
+            const apiUrl = 'http://localhost:8080/api/v1/hotel-services';
+            if (item) {
+                const response = await axios.put(`${apiUrl}/${item.id}`, values);
+                if (response.status === 200) {
+                    alert('Updated successfully');
+                } else {
+                    alert('Failed to update');
+                }
             } else {
-                alert("Failed to update amenity");
+                const response = await axios.post(apiUrl, values);
+                if (response.status === 200) {
+                    alert('Create successfully');
+                } else {
+                    alert('Failed to create');
+                }
             }
-        } else {
-            const response = await axios.post(apiUrl, data);
-            if (response.data) {
-                alert("Amenity created successfully");
-            } else {
-                alert("Failed to create amenity");
-            }
-        }
-    };
+        },
+    });
+
     return (
         <section>
             {/* Search */}
@@ -61,21 +44,29 @@ function AmenityDetail({ item }: { item: any }) {
                 <div className="card-header p-3">
                     <h1 className="text-2xl font-bold">Create Amenity</h1>
                 </div>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={formik.handleSubmit}>
                     <div className="card-body border-y border-slate-300 p-3 flex flex-wrap">
                         <div className="form-group mb-3 w-1/2 p-2">
                             <label htmlFor="name" className="block mb-2">Name</label>
-                            <input type="text" name="name" id="name" value={name}
-                                onChange={(e) => setName(e.target.value)}
-                                className="w-full p-2 border border-slate-300 rounded-md" />
-                            {nameError && <p className="text-red-500 text-sm">{nameError}</p>}
+                            <input type="text" id="name" name="name"
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.name}
+                                className="p-2 border border-slate-300 rounded-sm w-full" />
+                            {formik.touched.name && formik.errors.name ? (
+                                <div className="text-red-500">{typeof formik.errors.name === 'string' ? formik.errors.name : ''}</div>
+                            ) : null}
                         </div>
                         <div className="form-group mb-3 w-1/2 p-2">
                             <label htmlFor="price" className="block mb-2">Price</label>
-                            <input type="number" name="price" id="price" value={price}
-                                onChange={(e) => setPrice(parseFloat(e.target.value))}
-                                className="w-full p-2 border border-slate-300 rounded-md" />
-                            {priceError && <p className="text-red-500 text-sm">{priceError}</p>}
+                            <input type="price" id="price" name="price"
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.price}
+                                className="p-2 border border-slate-300 rounded-sm w-full" />
+                            {formik.touched.price && formik.errors.price ? (
+                                <div className="text-red-500">{typeof formik.errors.price === 'string' ? formik.errors.price : ''}</div>
+                            ) : null}
                         </div>
                     </div>
                     <div className="card-footer p-3 flex justify-between text-white">
