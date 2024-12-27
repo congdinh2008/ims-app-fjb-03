@@ -4,7 +4,7 @@ import axios from "axios";
 import { ErrorMessage, Field, Form, Formik, useFormik } from "formik";
 import * as Yup from "yup";
 
-function AmenityDetail({ item }: { item: any }) {
+function AmenityDetail({ item, cancel }: { item: any, cancel: any }) {
 
     const initialValues = {
         name: item && item.name ? item.name : '',
@@ -23,14 +23,14 @@ function AmenityDetail({ item }: { item: any }) {
         if (item) {
             const response = await axios.put(`${apiUrl}/${item.id}`, values);
             if (response.status === 200) {
-                alert('Updated successfully');
+                cancel();
             } else {
                 alert('Failed to update');
             }
         } else {
             const response = await axios.post(apiUrl, values);
             if (response.status === 200) {
-                alert('Create successfully');
+                cancel();
             } else {
                 alert('Failed to create');
             }
@@ -42,7 +42,7 @@ function AmenityDetail({ item }: { item: any }) {
             {/* Search */}
             <div className="card border border-slate-300 rounded-md">
                 <div className="card-header p-3">
-                    <h1 className="text-2xl font-bold">Create Amenity</h1>
+                    <h1 className="text-2xl font-bold">{item ? "Edit" : "Create"} Amenity</h1>
                 </div>
                 <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit} >
                     <Form>
@@ -59,7 +59,8 @@ function AmenityDetail({ item }: { item: any }) {
                             </div>
                         </div>
                         <div className="card-footer p-3 flex justify-between text-white">
-                            <button type="button" className="p-2 px-4 bg-green-500 hover:bg-green-600 rounded-full">
+                            <button type="button" onClick={cancel}
+                                className="p-2 px-4 bg-slate-100 hover:bg-slate-300 text-black rounded-full">
                                 <FontAwesomeIcon icon={faRotate} className="mr-2" />
                                 Cancel
                             </button>

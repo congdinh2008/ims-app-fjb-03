@@ -1,7 +1,7 @@
 import { faAngleDoubleLeft, faAngleDoubleRight, faAngleLeft, faAngleRight, faEdit, faEraser, faPlus, faSearch, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AmenityDetail from "./AmenityDetail";
 
 function AmenityList() {
@@ -15,6 +15,8 @@ function AmenityList() {
     const [pageLimit] = useState<number>(3);
     const [isShowDetail, setIsShowDetail] = useState<boolean>(false);
     const [selectedItem, setSelectedItem] = useState<any>({});
+
+    const detailComponent = useRef<any>(null);
 
     // Fetch data from API
     const searchData = async () => {
@@ -54,13 +56,21 @@ function AmenityList() {
     }
 
     const onCreate = () => {
-        setIsShowDetail(true);
+        setIsShowDetail(false);
         setSelectedItem(null);
+        setTimeout(() => {
+            setIsShowDetail(true);
+            detailComponent.current.scrollIntoView({ behavior: "smooth" });
+        });
     }
 
     const onEdit = async (item: any) => {
-        setIsShowDetail(true);
+        setIsShowDetail(false);
         setSelectedItem(item);
+        setTimeout(() => {
+            setIsShowDetail(true);
+            detailComponent.current.scrollIntoView({ behavior: "smooth" });
+        });
     };
 
     const onDelete = async (item: any) => {
@@ -74,6 +84,11 @@ function AmenityList() {
         }
 
     }
+
+    const onCancelDetail = () => {
+        setIsShowDetail(false);
+        searchData();
+    };
 
     return (
         <section>
@@ -199,7 +214,9 @@ function AmenityList() {
             </div>
 
             {/* Detail Component */}
-            {isShowDetail && <AmenityDetail item={selectedItem} />}
+            <div className="detail-form mb-80" ref={detailComponent}>
+                {isShowDetail && <AmenityDetail item={selectedItem} cancel={onCancelDetail} />}
+            </div>
         </section>
     )
 }
