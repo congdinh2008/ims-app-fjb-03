@@ -6,11 +6,36 @@ import { useState } from "react";
 function AmenityDetail({ item }: { item: any }) {
     const [name, setName] = useState<string>(item ? item.name : '');
     const [price, setPrice] = useState<number>(item ? item.price : 0);
+    const [nameError, setNameError] = useState<string>('');
+    const [priceError, setPriceError] = useState<string>('');
+
+    const validateForm = (data: any) => {
+        let isValid = true;
+        if (data.name === '') {
+            setNameError('Name is required');
+            isValid = false;
+        }
+
+        if (data.name.length < 2 || data.name.length > 50) {
+            setNameError('Name must be between 2 and 50 characters');
+            isValid = false;
+        }
+
+        if (data.price < 0) {
+            setPriceError('Price is required');
+            isValid = false;
+        }
+
+        return isValid;
+    }
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
         const apiUrl = 'http://localhost:8080/api/v1/hotel-services';
         const data = { name, price };
+        if (!validateForm(data)) {
+            return;
+        }
 
         if (item) {
             Object.assign(data, { id: item.id });
@@ -43,12 +68,14 @@ function AmenityDetail({ item }: { item: any }) {
                             <input type="text" name="name" id="name" value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 className="w-full p-2 border border-slate-300 rounded-md" />
+                            {nameError && <p className="text-red-500 text-sm">{nameError}</p>}
                         </div>
                         <div className="form-group mb-3 w-1/2 p-2">
                             <label htmlFor="price" className="block mb-2">Price</label>
                             <input type="number" name="price" id="price" value={price}
                                 onChange={(e) => setPrice(parseFloat(e.target.value))}
                                 className="w-full p-2 border border-slate-300 rounded-md" />
+                            {priceError && <p className="text-red-500 text-sm">{priceError}</p>}
                         </div>
                     </div>
                     <div className="card-footer p-3 flex justify-between text-white">
