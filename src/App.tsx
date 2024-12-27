@@ -10,6 +10,7 @@ import Register from './pages/auth/Register'
 import ManagerLayout from './shared/layouts/ManagerLayout'
 import Dashboard from './pages/manager/Dashboard'
 import AmenityList from './pages/manager/amenities/AmenityList'
+import RoomList from './pages/manager/rooms/RoomList'
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         {/* Manager Page */}
         <Route path="/manager/dashboard" element={<ManagerLayout><Dashboard /></ManagerLayout>} />
         <Route path="/manager/amenities" element={<ManagerLayout><AmenityList /></ManagerLayout>} />
+        <Route path="/manager/rooms" element={<ManagerLayout><RoomList /></ManagerLayout>} />
 
         {/* Auth Page */}
         <Route path="/auth/login" element={<AnonymousLayout><Login /></AnonymousLayout>} />
