@@ -1,7 +1,7 @@
-import { faEraser, faRotate, faSave } from "@fortawesome/free-solid-svg-icons";
+import { faEraser, faRotateLeft, faSave } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
-import { ErrorMessage, Field, Form, Formik, useFormik } from "formik";
+import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 
 function AmenityDetail({ item, cancel }: { item: any, cancel: any }) {
@@ -18,7 +18,7 @@ function AmenityDetail({ item, cancel }: { item: any, cancel: any }) {
         price: Yup.number().required('Price is required').min(0, 'Price must be at least 0')
     });
 
-    const onSubmit = async (values) => {
+    const onSubmit = async (values: any) => {
         const apiUrl = 'http://localhost:8080/api/v1/hotel-services';
         if (item) {
             const response = await axios.put(`${apiUrl}/${item.id}`, values);
@@ -61,7 +61,7 @@ function AmenityDetail({ item, cancel }: { item: any, cancel: any }) {
                         <div className="card-footer p-3 flex justify-between text-white">
                             <button type="button" onClick={cancel}
                                 className="p-2 px-4 bg-slate-100 hover:bg-slate-300 text-black rounded-full">
-                                <FontAwesomeIcon icon={faRotate} className="mr-2" />
+                                <FontAwesomeIcon icon={faRotateLeft} className="mr-2" />
                                 Cancel
                             </button>
                             <div className="search-actions space-x-3">
