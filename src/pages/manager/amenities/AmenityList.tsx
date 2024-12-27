@@ -4,6 +4,7 @@ import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import AmenityDetail from "./AmenityDetail";
 import TablePagination from "../../../core/components/TablePagination";
+import { AmenityService } from "../../../services/amenity.service";
 
 function AmenityList() {
     const [title] = useState<string>("Amenity Management");
@@ -31,11 +32,9 @@ function AmenityList() {
             sortBy: "name",
             order: "asc",
         }
-        const apiUrl = 'http://localhost:8080/api/v1/hotel-services/search';
-        // http://localhost:8080/api/v1/hotel-services/search?keyword=&page=0&size=10&sortBy=name&order=asc
-        const response = await axios.get(apiUrl, { params: filter });
-        setData(response.data.data);
-        setPageInfo(response.data.page);
+        const response = await AmenityService.search(filter);
+        setData(response.data);
+        setPageInfo(response.page);
     };
 
     useEffect(() => {
@@ -69,9 +68,8 @@ function AmenityList() {
     const onDelete = async (item: any) => {
         debugger
         console.log("Delete item: ", item);
-        const apiUrl = 'http://localhost:8080/api/v1/hotel-services';
-        const response = await axios.delete(`${apiUrl}/${item.id}`);
-        if (response.data) {
+        const response = await AmenityService.remove(item.id);
+        if (response) {
             searchData();
         } else {
             console.log("Delete failed");

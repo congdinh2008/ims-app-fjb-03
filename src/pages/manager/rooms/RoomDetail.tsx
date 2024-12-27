@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
+import { RoomService } from "../../../services/room.service";
 
 function RoomDetail({ item, cancel }: { item: any, cancel: any }) {
 
@@ -23,17 +24,16 @@ function RoomDetail({ item, cancel }: { item: any, cancel: any }) {
     });
 
     const onSubmit = async (values: any) => {
-        const apiUrl = 'http://localhost:8080/api/v1/rooms';
         if (item) {
-            const response = await axios.put(`${apiUrl}/${item.id}`, values);
-            if (response.status === 200) {
+            const response = await RoomService.update(item.id, values);
+            if (response) {
                 cancel();
             } else {
                 alert('Failed to update');
             }
         } else {
-            const response = await axios.post(apiUrl, values);
-            if (response.status === 200) {
+            const response = await RoomService.create(values);
+            if (response) {
                 cancel();
             } else {
                 alert('Failed to create');

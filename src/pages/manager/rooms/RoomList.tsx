@@ -4,6 +4,7 @@ import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import TablePagination from "../../../core/components/TablePagination";
 import RoomDetail from "./RoomDetail";
+import { RoomService } from "../../../services/room.service";
 
 function RoomList() {
     const [title] = useState<string>("Room Management");
@@ -33,10 +34,9 @@ function RoomList() {
             sortBy: "number",
             order: "asc",
         }
-        const apiUrl = 'http://localhost:8080/api/v1/rooms/search';
-        const response = await axios.get(apiUrl, { params: filter });
-        setData(response.data.data);
-        setPageInfo(response.data.page);
+        const response = await RoomService.search(filter);
+        setData(response.data);
+        setPageInfo(response.page);
     };
 
     useEffect(() => {
@@ -68,11 +68,8 @@ function RoomList() {
     };
 
     const onDelete = async (item: any) => {
-        debugger
-        console.log("Delete item: ", item);
-        const apiUrl = 'http://localhost:8080/api/v1/rooms';
-        const response = await axios.delete(`${apiUrl}/${item.id}`);
-        if (response.data) {
+        const response = await RoomService.remove(item.id);
+        if (response) {
             searchData();
         } else {
             console.log("Delete failed");
