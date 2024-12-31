@@ -1,6 +1,5 @@
 import { faEraser, faPlus, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import TablePagination from "../../../core/components/TablePagination";
 import RoomDetail from "./RoomDetail";
