@@ -10,14 +10,17 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-    const [userInformation, setUserInformation] = useState<any>();
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
+        localStorage.getItem('accessToken') ? true : false
+    );
+    const [userInformation, setUserInformation] = useState<any>(
+        JSON.parse(localStorage.getItem('userInformation') || '')
+    );
 
     // Check if user is already authenticated based on token in local storage
     useEffect(() => {
         const token = localStorage.getItem('accessToken');
         if (token) {
-            debugger
             setIsAuthenticated(true);
             setUserInformation(JSON.parse(localStorage.getItem('userInformation') || ''));
         }

@@ -27,7 +27,7 @@ function App() {
           <Route path="/contact" element={<Layout><Contact /></Layout>} />
 
           {/* Manager Page */}
-          <Route element={<PrivateRoute />}>
+          <Route element={<PrivateRoute requiredRoles={['Admin']} />}>
             <Route path="/manager/dashboard" element={<ManagerLayout><Dashboard /></ManagerLayout>} />
             <Route path="/manager/amenities" element={<ManagerLayout><AmenityList /></ManagerLayout>} />
             <Route path="/manager/rooms" element={<ManagerLayout><RoomList /></ManagerLayout>} />
